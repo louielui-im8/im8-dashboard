@@ -7,73 +7,47 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root {
-    --bg: #111214;
-    --surface: #1a1c20;
-    --surface2: #22252b;
-    --border: #2e3138;
-    --border2: #363a44;
-    --text: #f0eeea;
-    --text-muted: #7a7f8c;
-    --gold: #d4a843;
-    --gold-dim: #a07c2e;
-    --gold-bg: #1e1810;
-    --green: #34d399;
-    --green-bg: #0a2218;
-    --orange: #fb923c;
-    --orange-bg: #1e1208;
-    --red: #f87171;
-    --red-bg: #200a0a;
+    --bg: #111214; --surface: #1a1c20; --surface2: #22252b;
+    --border: #2e3138; --border2: #363a44;
+    --text: #f0eeea; --text-muted: #7a7f8c;
+    --gold: #d4a843; --gold-dim: #a07c2e; --gold-bg: #1e1810;
+    --green: #34d399; --green-bg: #0a2218;
+    --orange: #fb923c; --orange-bg: #1e1208;
+    --red: #f87171; --red-bg: #200a0a;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; }
-
-  /* Header */
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; }
   .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .header h1 { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
-  .header .meta-badge { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-dim); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-left: 8px; letter-spacing: 0.04em; }
-  .header .last-updated { color: var(--text-muted); font-size: 12px; }
-  .header .period-label { color: var(--text-muted); font-size: 12px; }
+  .meta-badge { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-dim); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-left: 8px; }
   .header-right { display: flex; align-items: center; gap: 16px; }
-
-  /* Layout */
+  .period-label, .last-updated { color: var(--text-muted); font-size: 12px; }
+  .refresh-btn { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-dim); font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 6px; cursor: pointer; }
+  .refresh-btn:hover { background: var(--gold-dim); color: #fff; }
   .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
   .section-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-
-  /* KPI Cards */
   .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; border-top: 2px solid var(--border2); }
+  .kpi-card { background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--border2); border-radius: 10px; padding: 16px 20px; }
   .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
   .kpi-value { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; letter-spacing: -0.02em; }
-  .kpi-value.green { color: var(--green); }
-  .kpi-value.orange { color: var(--orange); }
-  .kpi-value.red { color: var(--red); }
+  .kpi-value.green { color: var(--green); } .kpi-value.orange { color: var(--orange); } .kpi-value.red { color: var(--red); }
   .kpi-change { font-size: 12px; margin-top: 6px; }
-  .kpi-change.up { color: var(--green); }
-  .kpi-change.down { color: var(--red); }
-  .kpi-change.neutral { color: var(--text-muted); }
+  .kpi-change.up { color: var(--green); } .kpi-change.down { color: var(--red); } .kpi-change.neutral { color: var(--text-muted); }
   .kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-  /* Charts */
   .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
   .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
-  .chart-card.full { grid-column: span 2; }
-  .chart-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .chart-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
   .chart-container { position: relative; height: 220px; }
-
-  /* Revenue Pacing */
-  .pacing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; border-left: 3px solid var(--gold); }
+  .pacing-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
   .pacing-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
   .pacing-title { font-size: 14px; font-weight: 600; color: var(--text); }
   .pacing-numbers { font-size: 13px; color: var(--text-muted); }
   .pacing-numbers span { color: var(--text); font-weight: 600; }
   .progress-bar-bg { background: var(--surface2); border-radius: 6px; height: 10px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+  .progress-bar-fill { height: 100%; border-radius: 6px; }
   .progress-bar-fill.green { background: linear-gradient(90deg, #059669, var(--green)); }
   .progress-bar-fill.orange { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
   .progress-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--text-muted); }
-
-  /* Country Cards */
   .country-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
   .country-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
   .country-card.border-green { border-left: 3px solid var(--green); }
@@ -85,15 +59,11 @@
   .country-stat:last-child { border-bottom: none; }
   .stat-label { font-size: 12px; color: var(--text-muted); }
   .stat-value { font-size: 13px; font-weight: 600; color: var(--text); }
-  .stat-value.green { color: var(--green); }
-  .stat-value.orange { color: var(--orange); }
-  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); } .stat-value.orange { color: var(--orange); } .stat-value.red { color: var(--red); }
   .roas-badge { font-size: 11px; font-weight: 600; padding: 1px 6px; border-radius: 4px; }
   .roas-badge.green { background: var(--green-bg); color: var(--green); }
   .roas-badge.orange { background: var(--orange-bg); color: var(--orange); }
   .roas-badge.red { background: var(--red-bg); color: var(--red); }
-
-  /* Tables */
   .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
   .table-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .table-title { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
@@ -101,53 +71,28 @@
   .badge.red { background: var(--red-bg); color: var(--red); }
   .badge.orange { background: var(--orange-bg); color: var(--orange); }
   .badge.green { background: var(--green-bg); color: var(--green); }
-  .badge.gold { background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold-dim); }
   table { width: 100%; border-collapse: collapse; }
   th { text-align: left; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
   td { padding: 10px 12px; border-bottom: 1px solid var(--surface2); font-size: 13px; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--surface2); }
-  .campaign-name { color: var(--text); font-weight: 500; max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .campaign-name { color: var(--text); font-weight: 500; max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
   .cpp-pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; }
   .cpp-pill.green { background: var(--green-bg); color: var(--green); }
   .cpp-pill.orange { background: var(--orange-bg); color: var(--orange); }
   .cpp-pill.red { background: var(--red-bg); color: var(--red); }
-
-  /* Fatigue */
-  .fatigue-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--surface2); }
-  .fatigue-row:last-child { border-bottom: none; }
-  .fatigue-freq { font-size: 22px; font-weight: 800; color: var(--orange); min-width: 50px; }
-  .fatigue-info { flex: 1; }
-  .fatigue-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 500px; }
-  .fatigue-meta { font-size: 12px; color: var(--text-muted); }
-  .fatigue-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--orange-bg); color: var(--orange); white-space: nowrap; }
-
-  /* Two col layout */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-
-  /* Divider */
   .section-divider { height: 1px; background: var(--border); margin: 28px 0; }
-
-  /* Legend */
+  .threshold-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+  .threshold-note .green { color: var(--green); } .threshold-note .orange { color: var(--orange); } .threshold-note .red { color: var(--red); }
   .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
   .legend-line { width: 20px; height: 2px; border-radius: 1px; }
-
-  /* Tooltip */
-  .threshold-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-  .threshold-note .green { color: var(--green); }
-  .threshold-note .orange { color: var(--orange); }
-  .threshold-note .red { color: var(--red); }
-
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-  /* No data */
   .empty-state { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; }
-  .empty-state .emoji { font-size: 24px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -158,448 +103,290 @@
     <span class="meta-badge">META ADS</span>
   </div>
   <div class="header-right">
-    <span class="period-label">📅 L7D: Jun 17–22 &nbsp;|&nbsp; Prior: Jun 10–16</span>
-    <span class="last-updated">🕐 Data as of Jun 23, 2026 · Partial day excluded from averages</span>
+    <span class="period-label">📅 L7D: 2026-06-18 – 2026-06-24 &nbsp;|&nbsp; Prior: 2026-06-11 – 2026-06-17</span>
+    <span class="last-updated">🕐 Jun 25, 2026 04:00 UTC</span>
+    <button class="refresh-btn" onclick="window.location.reload()">↻ Refresh</button>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- KPI CARDS -->
-  <div class="section-title">L7D Overview (Jun 17–22 · 6 full days)</div>
+  <div class="section-title">L7D Overview (2026-06-18 – 2026-06-24)</div>
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-label">Total Spend</div>
-      <div class="kpi-value">$1.94M</div>
-      <div class="kpi-change down">▼ $161K vs prior week ($2.10M)</div>
-      <div class="kpi-sub">$323K avg/day</div>
+      <div class="kpi-value">$2.28M</div>
+      <div class="kpi-change up">▲ $185.5K vs prior ($2.10M)</div>
+      <div class="kpi-sub">$326.3K/day avg</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Purchases (NC)</div>
-      <div class="kpi-value">6,098</div>
-      <div class="kpi-change down">▼ 535 vs prior week (6,633)</div>
-      <div class="kpi-sub">1,016 avg/day</div>
+      <div class="kpi-value">7,177</div>
+      <div class="kpi-change up">▲ 686 vs prior (6,491)</div>
+      <div class="kpi-sub">1,025/day avg</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Est. NC Revenue</div>
-      <div class="kpi-value">$1.59M</div>
-      <div class="kpi-change up">▲ $264K avg/day vs $250K target</div>
+      <div class="kpi-value">$1.87M</div>
+      <div class="kpi-change neutral">$266.6K avg/day vs $250,000 target</div>
       <div class="kpi-sub">Based on $260 NC AOV</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Avg CAC (CPP)</div>
-      <div class="kpi-value orange" id="cac-l7d">$317.53</div>
-      <div class="kpi-change neutral">Prior week avg: $316.27</div>
+      <div class="kpi-value orange">$318.22</div>
+      <div class="kpi-change neutral">Prior week avg: $323.27</div>
       <div class="kpi-sub">Target: &lt;$300</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Est. ROAS (Meta)</div>
       <div class="kpi-value orange">0.82x</div>
-      <div class="kpi-change neutral">Prior week: 0.82x</div>
+      <div class="kpi-change neutral">Prior week: 0.80x</div>
       <div class="kpi-sub">$260 AOV × purchases ÷ spend</div>
     </div>
   </div>
 
-  <!-- REVENUE PACING -->
   <div class="pacing-card">
     <div class="pacing-header">
       <div class="pacing-title">📊 NC Revenue Pacing — June 2026</div>
       <div class="pacing-numbers">
-        MTD Actual: <span>$4,939,459</span> &nbsp;|&nbsp;
-        MTD Target (22 days × $250K): <span>$5,500,000</span> &nbsp;|&nbsp;
-        Gap: <span style="color:#ef4444">-$560,541</span> &nbsp;|&nbsp;
-        L7D Daily Avg: <span style="color:#22c55e">$264,247</span>
+        MTD Actual: <span>$5.56M</span> &nbsp;|&nbsp;
+        MTD Target (24d × $250,000): <span>$6.00M</span> &nbsp;|&nbsp;
+        Gap: <span style="color:var(--red)">$-444,580</span> &nbsp;|&nbsp;
+        L7D Daily Avg: <span style="color:var(--green)">$266.6K</span>
       </div>
     </div>
     <div class="progress-bar-bg">
-      <div class="progress-bar-fill orange" style="width: 89.8%"></div>
+      <div class="progress-bar-fill orange" style="width:92.6%"></div>
     </div>
     <div class="progress-meta">
       <span>$0</span>
-      <span style="color:#f97316;font-weight:600">89.8% of MTD target</span>
-      <span>$5.5M target</span>
-    </div>
-    <div class="threshold-note" style="margin-top:10px;">
-      📈 L7D avg is <span class="green">$264K/day</span> — above target. MTD is behind because early June (post-Shopify outage) dragged the average down. You're trending in the right direction.
+      <span style="color:var(--orange);font-weight:600">92.6% of MTD target</span>
+      <span>$6.00M target</span>
     </div>
   </div>
 
-  <!-- CHARTS -->
   <div class="charts-grid">
     <div class="chart-card">
       <div class="chart-title">💸 Daily Spend — L7D vs Prior Week</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-line" style="background:#3b82f6"></div> Jun 17–22 (L7D)</div>
-        <div class="legend-item"><div class="legend-line" style="background:#6b7280;border-top:2px dashed #6b7280;background:none;width:20px"></div> Jun 10–16 (Prior)</div>
+        <div class="legend-item"><div class="legend-line" style="background:#d4a843;height:2px;width:20px"></div> L7D</div>
+        <div class="legend-item"><div class="legend-line" style="background:#4b5563;height:2px;width:20px"></div> Prior</div>
       </div>
-      <div class="chart-container">
-        <canvas id="spendChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="spendChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">🎯 Daily CAC (CPP) — L7D vs Prior Week</div>
+      <div class="chart-title">🎯 Daily CAC (CPP) — L7D</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> &lt;$300 (green)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div> $300–$350 (orange)</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> &gt;$350 (red)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> &lt;$300</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div> $300–$350</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div> &gt;$350</div>
       </div>
-      <div class="chart-container">
-        <canvas id="cacChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="cacChart"></canvas></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">🛒 Daily Purchases — L7D vs Prior Week</div>
-      <div class="chart-container">
-        <canvas id="purchasesChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="purchasesChart"></canvas></div>
     </div>
     <div class="chart-card">
       <div class="chart-title">📈 Est. Daily NC Revenue vs $250K Target</div>
-      <div class="chart-container">
-        <canvas id="revenueChart"></canvas>
-      </div>
+      <div class="chart-container"><canvas id="revenueChart"></canvas></div>
     </div>
   </div>
 
-  <!-- COUNTRY BREAKDOWN -->
-  <div class="section-title">Key Market Performance — L7D (Jun 17–22)</div>
+  <div class="section-title">Key Market Performance — L7D</div>
   <div class="threshold-note" style="margin-bottom:12px;">
     CAC: <span class="green">Green &lt;$300</span> · <span class="orange">Orange $300–$350</span> · <span class="red">Red &gt;$350</span> &nbsp;|&nbsp;
     ROAS: <span class="green">Green &gt;1.0x</span> · <span class="orange">Orange 0.71–0.99x</span> · <span class="red">Red &lt;0.70x</span>
   </div>
   <div class="country-grid">
-
-    <!-- US -->
-    <div class="country-card border-orange">
-      <div class="country-name"><span class="country-flag">🇺🇸</span> United States</div>
-      <div class="country-stat"><span class="stat-label">Spend</span><span class="stat-value">$976,719</span></div>
-      <div class="country-stat"><span class="stat-label">Purchases</span><span class="stat-value">3,144</span></div>
-      <div class="country-stat"><span class="stat-label">CAC</span><span class="stat-value orange">$310.66</span></div>
-      <div class="country-stat"><span class="stat-label">Est. ROAS</span><span class="roas-badge orange">0.84x</span></div>
-      <div class="country-stat"><span class="stat-label">% of spend</span><span class="stat-value">43.6%</span></div>
-    </div>
-
-    <!-- CA -->
+    
     <div class="country-card border-green">
-      <div class="country-name"><span class="country-flag">🇨🇦</span> Canada</div>
-      <div class="country-stat"><span class="stat-label">Spend</span><span class="stat-value">$267,636</span></div>
-      <div class="country-stat"><span class="stat-label">Purchases</span><span class="stat-value">936</span></div>
-      <div class="country-stat"><span class="stat-label">CAC</span><span class="stat-value green">$285.94</span></div>
-      <div class="country-stat"><span class="stat-label">Est. ROAS</span><span class="roas-badge orange">0.91x</span></div>
-      <div class="country-stat"><span class="stat-label">% of spend</span><span class="stat-value">11.9%</span></div>
+      <div class="country-name"><span class="country-flag">🇺🇸</span>United States</div>
+      <div class="country-stat">
+        <span class="stat-label">Spend</span>
+        <span class="stat-value">$0</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Purchases</span>
+        <span class="stat-value">0</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">CAC</span>
+        <span class="stat-value green">N/A</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Est. ROAS</span>
+        <span class="roas-badge red">0.00x</span>
+      </div>
     </div>
-
-    <!-- GB -->
-    <div class="country-card border-red">
-      <div class="country-name"><span class="country-flag">🇬🇧</span> United Kingdom</div>
-      <div class="country-stat"><span class="stat-label">Spend</span><span class="stat-value">$121,823</span></div>
-      <div class="country-stat"><span class="stat-label">Purchases</span><span class="stat-value">324</span></div>
-      <div class="country-stat"><span class="stat-label">CAC</span><span class="stat-value red">$376.00</span></div>
-      <div class="country-stat"><span class="stat-label">Est. ROAS</span><span class="roas-badge red">0.69x</span></div>
-      <div class="country-stat"><span class="stat-label">% of spend</span><span class="stat-value">5.4%</span></div>
+    
+    <div class="country-card border-green">
+      <div class="country-name"><span class="country-flag">🇨🇦</span>Canada</div>
+      <div class="country-stat">
+        <span class="stat-label">Spend</span>
+        <span class="stat-value">$304.1K</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Purchases</span>
+        <span class="stat-value">1,074</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">CAC</span>
+        <span class="stat-value green">$283</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Est. ROAS</span>
+        <span class="roas-badge orange">0.92x</span>
+      </div>
     </div>
-
-    <!-- AU -->
+    
+    <div class="country-card border-green">
+      <div class="country-name"><span class="country-flag">🇬🇧</span>United Kingdom</div>
+      <div class="country-stat">
+        <span class="stat-label">Spend</span>
+        <span class="stat-value">$0</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Purchases</span>
+        <span class="stat-value">0</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">CAC</span>
+        <span class="stat-value green">N/A</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Est. ROAS</span>
+        <span class="roas-badge red">0.00x</span>
+      </div>
+    </div>
+    
     <div class="country-card border-orange">
-      <div class="country-name"><span class="country-flag">🇦🇺</span> Australia</div>
-      <div class="country-stat"><span class="stat-label">Spend</span><span class="stat-value">$118,558</span></div>
-      <div class="country-stat"><span class="stat-label">Purchases</span><span class="stat-value">338</span></div>
-      <div class="country-stat"><span class="stat-label">CAC</span><span class="stat-value orange">$350.76</span></div>
-      <div class="country-stat"><span class="stat-label">Est. ROAS</span><span class="roas-badge orange">0.74x</span></div>
-      <div class="country-stat"><span class="stat-label">% of spend</span><span class="stat-value">5.3%</span></div>
+      <div class="country-name"><span class="country-flag">🇦🇺</span>Australia</div>
+      <div class="country-stat">
+        <span class="stat-label">Spend</span>
+        <span class="stat-value">$131.4K</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Purchases</span>
+        <span class="stat-value">389</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">CAC</span>
+        <span class="stat-value orange">$338</span>
+      </div>
+      <div class="country-stat">
+        <span class="stat-label">Est. ROAS</span>
+        <span class="roas-badge orange">0.77x</span>
+      </div>
     </div>
-
   </div>
 
   <div class="section-divider"></div>
+  <div class="section-title">Campaign Actions</div>
 
-  <!-- CUT LIST -->
   <div class="table-card">
     <div class="table-header">
-      <div class="table-title">🔴 Cut List — CPP &gt; $600 (L7D)</div>
-      <span class="badge red">1 campaign</span>
+      <div class="table-title">🔴 Cut List <span class="badge red">1 campaigns</span></div>
+      <span style="font-size:12px;color:var(--text-muted);">CPP &gt; $600 over L7D — cut immediately</span>
     </div>
     <table>
-      <thead>
-        <tr>
-          <th>Campaign</th>
-          <th>Spend (L7D)</th>
-          <th>Purchases</th>
-          <th>CPP</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Campaign</th><th>Spend</th><th>Purchases</th><th>CAC</th><th>Est. ROAS</th></tr></thead>
       <tbody>
         <tr>
-          <td><div class="campaign-name">L4 | 20260616_TOFU_AUS_SUPERSCALER_ASC_AUTO_IR_WINNERS_LC_MT*</div></td>
-          <td>$16,794</td>
-          <td>27</td>
-          <td><span class="cpp-pill red">$621.98</span></td>
-          <td style="color:#ef4444;font-weight:600;">✂ Cut</td>
-        </tr>
-      </tbody>
+          <td><span class="campaign-name">L4 | 20260616_TOFU_AUS_SUPERSCALER_ASC_AUTO_IR_WINNERS_LC_MT*</span></td>
+          <td>$18.0K</td>
+          <td>29</td>
+          <td><span class="cpp-pill red">$621</span></td>
+          <td><span class="roas-badge red">0.42x</span></td>
+        </tr></tbody>
     </table>
   </div>
 
-  <!-- WATCH LIST -->
-  <div class="table-card">
-    <div class="table-header">
-      <div class="table-title">🟠 Watch List — CPP $350–$600, Substantial Spend (L7D)</div>
-      <span class="badge orange">5 campaigns</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Campaign</th>
-          <th>Spend (L7D)</th>
-          <th>Purchases</th>
-          <th>CPP</th>
-          <th>Frequency</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="campaign-name">L5 | 20260512_GLOBAL_ASCCBO_AUTO_7DC_INTERMIAMICF_MT*</div></td>
-          <td>$19,586</td>
-          <td>35</td>
-          <td><span class="cpp-pill red">$559.60</span></td>
-          <td>2.13</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L1 | 20260320_TOFU_GLOBAL_CBO_AUTO_IR_VID_IM8_CREATORCHALLENGE</div></td>
-          <td>$6,367</td>
-          <td>11</td>
-          <td><span class="cpp-pill red">$578.85</span></td>
-          <td>1.84</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L4 | 20260610_TOFU_UK_SUPERSCALER_ASC_AUTO_IR_WINNERS_LC_MT*</div></td>
-          <td>$20,142</td>
-          <td>40</td>
-          <td><span class="cpp-pill red">$503.55</span></td>
-          <td>1.64</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260327_TOFU_GLOBAL_ASCCBO_AUTO_LC_AMBASSADOR_MT*</div></td>
-          <td>$59,677</td>
-          <td>150</td>
-          <td><span class="cpp-pill orange">$397.84</span></td>
-          <td>2.26</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260319_TOFU_GLOBAL_ASCCBO_AUTO_IR_LC_ENGAGER/ATC(Retargeting)</div></td>
-          <td>$18,050</td>
-          <td>51</td>
-          <td><span class="cpp-pill orange">$353.93</span></td>
-          <td>1.85</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- TOP WINNERS -->
-  <div class="table-card">
-    <div class="table-header">
-      <div class="table-title">🏆 Top Winners — CPP &lt; $300, Scale These (L7D)</div>
-      <span class="badge green">8 campaigns</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Campaign</th>
-          <th>Spend (L7D)</th>
-          <th>Purchases</th>
-          <th>CPP</th>
-          <th>Frequency</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260618_TOFU_GLOBAL_ASCCBO_AUTO_IR_tROAs(1.00)_ATTN ADVERTS (Co-Branded)_MT*</div></td>
-          <td>$12,107</td>
-          <td>66</td>
-          <td><span class="cpp-pill green">$183.43</span></td>
-          <td>2.90</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L1 | 20260622_TOFU_GLOBAL_CBO_AUTO_IR_VID_IM8_tROAs(0.80)_CREATORCHALLENGE</div></td>
-          <td>$849</td>
-          <td>4</td>
-          <td><span class="cpp-pill green">$212.15</span></td>
-          <td>1.35</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260608_TOFU_GLOBAL_ASCCBO_AUTO_IR_tROAs(0.85)_ICP(MASTER FUNNEL)_MT*</div></td>
-          <td>$10,222</td>
-          <td>48</td>
-          <td><span class="cpp-pill green">$212.95</span></td>
-          <td>2.24</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L1 | 20260320_TOFU_GLOBAL_CBO_AUTO_IR_VID#6 (Prenetics_MY_1)</div></td>
-          <td>$183,400</td>
-          <td>764</td>
-          <td><span class="cpp-pill green">$240.05</span></td>
-          <td>2.00</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260319_TOFU_GLOBAL_ASC_AUTO_IR_ATTN ADVERTS</div></td>
-          <td>$154,490</td>
-          <td>591</td>
-          <td><span class="cpp-pill green">$261.40</span></td>
-          <td>2.61</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260326_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_JOINTS_MT*</div></td>
-          <td>$46,821</td>
-          <td>170</td>
-          <td><span class="cpp-pill green">$275.42</span></td>
-          <td>2.28</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260317_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_SUPP SKEPTICS_MT*</div></td>
-          <td>$23,798</td>
-          <td>82</td>
-          <td><span class="cpp-pill green">$290.22</span></td>
-          <td>2.85</td>
-        </tr>
-        <tr>
-          <td><div class="campaign-name">L3 | 20260309_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_MENOPAUSE_MT*</div></td>
-          <td>$88,069</td>
-          <td>295</td>
-          <td><span class="cpp-pill green">$298.54</span></td>
-          <td>2.55</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- FATIGUE ALERTS -->
-  <div class="table-card">
-    <div class="table-header">
-      <div class="table-title">⚠️ Creative Fatigue Alerts — Frequency &gt; 3.5 (L7D)</div>
-      <span class="badge orange">2 campaigns</span>
-    </div>
-    <div class="fatigue-row">
-      <div class="fatigue-freq">4.05×</div>
-      <div class="fatigue-info">
-        <div class="fatigue-name">L3 | 20260305_TOFU_GLOBAL_ASC_AUTO_JACSAVAGEADVERTORIAL_LC</div>
-        <div class="fatigue-meta">Spend: $163,505 · Purchases: 488 · CPP: $335 · Same audience seeing this 4× in 7 days</div>
+  <div class="two-col">
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">🟠 Watch List <span class="badge orange">7</span></div>
       </div>
-      <span class="fatigue-badge">🔄 Refresh creative</span>
+      <table>
+        <thead><tr><th>Campaign</th><th>Spend</th><th>CAC</th><th>ROAS</th></tr></thead>
+        <tbody><tr><td><span class='campaign-name'>L4 | 20260319_TOFU_US_SUPERSCALER_ASC_AUTO_IR_WINNERS_LC_MT*</span></td><td>$25.1K</td><td><span class='cpp-pill orange'>$353</span></td><td><span class='roas-badge orange'>0.74x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260327_TOFU_GLOBAL_ASCCBO_AUTO_LC_AMBASSADOR_MT*</span></td><td>$61.7K</td><td><span class='cpp-pill orange'>$363</span></td><td><span class='roas-badge orange'>0.72x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260319_TOFU_GLOBAL_ASCCBO_AUTO_IR_LC_ENGAGER/ATC(Retargeting)</span></td><td>$16.6K</td><td><span class='cpp-pill orange'>$405</span></td><td><span class='roas-badge red'>0.64x</span></td></tr><tr><td><span class='campaign-name'>L1 | 20260421_TOFU_GLOBAL_CBO_AUTO_IR_IMG</span></td><td>$8.0K</td><td><span class='cpp-pill orange'>$471</span></td><td><span class='roas-badge red'>0.55x</span></td></tr><tr><td><span class='campaign-name'>L5 | 20260512_GLOBAL_ASCCBO_AUTO_7DC_INTERMIAMICF_MT*</span></td><td>$13.9K</td><td><span class='cpp-pill orange'>$497</span></td><td><span class='roas-badge red'>0.52x</span></td></tr><tr><td><span class='campaign-name'>L4 | 20260610_TOFU_UK_SUPERSCALER_ASC_AUTO_IR_WINNERS_LC_MT*</span></td><td>$20.4K</td><td><span class='cpp-pill orange'>$567</span></td><td><span class='roas-badge red'>0.46x</span></td></tr><tr><td><span class='campaign-name'>L1 | 20260320_TOFU_GLOBAL_CBO_AUTO_IR_VID_IM8_CREATORCHALLENGE</span></td><td>$4.1K</td><td><span class='cpp-pill orange'>$587</span></td><td><span class='roas-badge red'>0.44x</span></td></tr></tbody>
+      </table>
     </div>
-    <div class="fatigue-row">
-      <div class="fatigue-freq">3.86×</div>
-      <div class="fatigue-info">
-        <div class="fatigue-name">L2 | 20260303_TOFU_GLOBAL_ASC_AUTO_GETPDP (NEW)(CLPT)_MT* — MAIN CAMPAIGN</div>
-        <div class="fatigue-meta">Spend: $1,190,475 · Purchases: 3,660 · CPP: $325 · Highest spend campaign — needs fresh creatives urgently</div>
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">🟢 Top Winners <span class="badge green">7</span></div>
       </div>
-      <span class="fatigue-badge">🚨 Priority refresh</span>
+      <table>
+        <thead><tr><th>Campaign</th><th>Spend</th><th>CAC</th><th>ROAS</th></tr></thead>
+        <tbody><tr><td><span class='campaign-name'>L3 | 20260618_TOFU_GLOBAL_ASCCBO_AUTO_IR_tROAs(1.00)_ATTN ADVERTS (Co-Branded)_MT*</span></td><td>$20.7K</td><td><span class='cpp-pill green'>$218</span></td><td><span class='roas-badge green'>1.19x</span></td></tr><tr><td><span class='campaign-name'>L1 | 20260320_TOFU_GLOBAL_CBO_AUTO_IR_VID#6 (Prenetics_MY_1)</span></td><td>$196.1K</td><td><span class='cpp-pill green'>$236</span></td><td><span class='roas-badge green'>1.10x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260319_TOFU_GLOBAL_ASC_AUTO_IR_ATTN ADVERTS (PREV: GETPDP(CLPT) from Prenetics 1_1)</span></td><td>$164.6K</td><td><span class='cpp-pill green'>$266</span></td><td><span class='roas-badge orange'>0.98x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260309_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_MENOPAUSE_MT*</span></td><td>$84.8K</td><td><span class='cpp-pill green'>$268</span></td><td><span class='roas-badge orange'>0.97x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260326_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_JOINTS_MT*</span></td><td>$52.6K</td><td><span class='cpp-pill green'>$268</span></td><td><span class='roas-badge orange'>0.97x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260317_TOFU_GLOBAL_ASCCBO_AUTO_LC_ICP_SUPP SKEPTICS_MT*</span></td><td>$25.3K</td><td><span class='cpp-pill green'>$278</span></td><td><span class='roas-badge orange'>0.94x</span></td></tr><tr><td><span class='campaign-name'>L3 | 20260608_TOFU_GLOBAL_ASCCBO_AUTO_IR_tROAs(0.85)_ICP(MASTER FUNNEL)_MT*</span></td><td>$16.8K</td><td><span class='cpp-pill green'>$280</span></td><td><span class='roas-badge orange'>0.93x</span></td></tr></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- BONUS: Other markets worth watching -->
-  <div class="table-card">
-    <div class="table-header">
-      <div class="table-title">🌍 Other Markets — Notable CAC (L7D)</div>
-      <span class="badge orange">flagged</span>
-    </div>
-    <table>
-      <thead>
-        <tr><th>Country</th><th>Spend</th><th>Purchases</th><th>CAC</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>🇮🇹 Italy</td><td>$38,237</td><td>68</td><td><span class="cpp-pill red">$562.31</span></td><td style="color:#ef4444">Cut candidate</td></tr>
-        <tr><td>🇩🇪 Germany</td><td>$45,300</td><td>104</td><td><span class="cpp-pill orange">$435.57</span></td><td style="color:#f97316">Watch</td></tr>
-        <tr><td>🇬🇷 Greece</td><td>$21,426</td><td>47</td><td><span class="cpp-pill orange">$455.87</span></td><td style="color:#f97316">Watch</td></tr>
-        <tr><td>🇸🇬 Singapore</td><td>$52,801</td><td>212</td><td><span class="cpp-pill green">$249.06</span></td><td style="color:#22c55e">Strong — scale</td></tr>
-        <tr><td>🇭🇰 Hong Kong</td><td>$32,103</td><td>157</td><td><span class="cpp-pill green">$204.48</span></td><td style="color:#22c55e">Best CAC globally</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style="height:40px"></div>
 </div>
 
 <script>
-  // ── DATA ──────────────────────────────────────────────
-  const labels7d     = ['Jun 17','Jun 18','Jun 19','Jun 20','Jun 21','Jun 22'];
-  const labelsPrior  = ['Jun 10','Jun 11','Jun 12','Jun 13','Jun 14','Jun 15','Jun 16'];
+const GOLD = '#d4a843', GOLD_DIM = '#a07c2e';
+const GREEN = '#34d399', ORANGE = '#fb923c', RED = '#f87171';
+const SURFACE2 = '#22252b', TEXT_MUTED = '#7a7f8c';
 
-  const spend7d     = [300614, 290490, 312606, 294580, 382719, 355279];
-  const spendPrior  = [300042, 282472, 272413, 273308, 356681, 311733, 301106];
+Chart.defaults.color = TEXT_MUTED;
+Chart.defaults.borderColor = SURFACE2;
 
-  const cpp7d       = [351.18, 334.67, 328.71, 308.14, 290.82, 308.67];
-  const cppPrior    = [300.34, 344.90, 348.80, 297.40, 292.36, 319.73, 327.29];
+const labels = ["Jun 18", "Jun 19", "Jun 20", "Jun 21", "Jun 22", "Jun 23", "Jun 24"];
+const spendL7D = [290490, 312606, 294580, 382730, 355664, 324497, 323297];
+const spendPrior = [282472, 272413, 273308, 356681, 311733, 301106, 300614];
+const cacL7D = [335, 329, 308, 291, 309, 306, 370];
+const purchasesL7D = [868, 951, 956, 1317, 1151, 1061, 874];
+const purchasesPrior = [819, 781, 919, 1220, 975, 920, 856];
+const revL7D = [225680, 247260, 248560, 342420, 299260, 275860, 227240];
 
-  const purch7d     = [856, 868, 951, 956, 1316, 1151];
-  const purchPrior  = [999, 819, 781, 919, 1220, 975, 920];
+new Chart(document.getElementById('spendChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'L7D', data: spendL7D, borderColor: GOLD, backgroundColor: GOLD+'22', tension: 0.3, fill: true, pointRadius: 3 },
+      { label: 'Prior', data: spendPrior, borderColor: '#4b5563', borderDash: [4,4], tension: 0.3, fill: false, pointRadius: 2 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '$'+Math.round(v/1000)+'K' } } } }
+});
 
-  const rev7d       = purch7d.map(p => Math.round(p * 260));
-  const revPrior    = purchPrior.map(p => Math.round(p * 260));
-  const TARGET_LINE = 250000;
-
-  const chartDefaults = {
+const cacColors = cacL7D.map(v => v < 300 ? GREEN : v <= 350 ? ORANGE : RED);
+new Chart(document.getElementById('cacChart'), {
+  type: 'bar',
+  data: { labels, datasets: [{ label: 'CAC', data: cacL7D, backgroundColor: cacColors, borderRadius: 4 }] },
+  options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } }, tooltip: { backgroundColor: '#1c2128', titleColor: '#e2e8f0', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1 } },
-    scales: {
-      x: { ticks: { color: '#8b949e', font: { size: 11 } }, grid: { color: '#21262d' } },
-      y: { ticks: { color: '#8b949e', font: { size: 11 } }, grid: { color: '#21262d' } }
-    }
-  };
+    plugins: { legend: { display: false }, annotation: { annotations: { line1: { type: 'line', yMin: 300, yMax: 300, borderColor: GREEN, borderWidth: 1, borderDash: [4,4] } } } },
+    scales: { y: { ticks: { callback: v => '$'+v } } }
+  }
+});
 
-  // ── SPEND CHART ──
-  new Chart(document.getElementById('spendChart'), {
-    type: 'line',
-    data: {
-      labels: labels7d,
-      datasets: [
-        { label: 'L7D Spend', data: spend7d, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#3b82f6', fill: true },
-        { label: 'Prior Week', data: spendPrior, borderColor: '#6b7280', borderDash: [5,4], backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, pointBackgroundColor: '#6b7280' }
-      ]
-    },
-    options: { ...chartDefaults, plugins: { ...chartDefaults.plugins }, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: v => '$' + (v/1000).toFixed(0) + 'K' } } } }
-  });
+new Chart(document.getElementById('purchasesChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'L7D', data: purchasesL7D, borderColor: GOLD, backgroundColor: GOLD+'22', tension: 0.3, fill: true, pointRadius: 3 },
+      { label: 'Prior', data: purchasesPrior, borderColor: '#4b5563', borderDash: [4,4], tension: 0.3, fill: false, pointRadius: 2 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+});
 
-  // ── CAC CHART ──
-  new Chart(document.getElementById('cacChart'), {
-    type: 'line',
-    data: {
-      labels: labels7d,
-      datasets: [
-        { label: 'L7D CAC', data: cpp7d, borderColor: '#f97316', backgroundColor: 'rgba(249,115,22,0.08)', tension: 0.3, pointRadius: 5, pointBackgroundColor: cpp7d.map(v => v < 300 ? '#22c55e' : v <= 350 ? '#f97316' : '#ef4444'), fill: true },
-        { label: 'Prior Week', data: cppPrior, borderColor: '#6b7280', borderDash: [5,4], backgroundColor: 'transparent', tension: 0.3, pointRadius: 3, pointBackgroundColor: '#6b7280' },
-        { label: '$300 Target', data: Array(labels7d.length).fill(300), borderColor: '#22c55e', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false }
-      ]
-    },
-    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 260, ticks: { ...chartDefaults.scales.y.ticks, callback: v => '$' + v } } } }
-  });
-
-  // ── PURCHASES CHART ──
-  new Chart(document.getElementById('purchasesChart'), {
-    type: 'bar',
-    data: {
-      labels: labels7d,
-      datasets: [
-        { label: 'L7D Purchases', data: purch7d, backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 4 },
-        { label: 'Prior Week', data: purchPrior, backgroundColor: 'rgba(107,114,128,0.4)', borderRadius: 4 }
-      ]
-    },
-    options: { ...chartDefaults, scales: { ...chartDefaults.scales } }
-  });
-
-  // ── REVENUE CHART ──
-  new Chart(document.getElementById('revenueChart'), {
-    type: 'line',
-    data: {
-      labels: labels7d,
-      datasets: [
-        { label: 'Est. NC Revenue', data: rev7d, borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,0.08)', tension: 0.3, pointRadius: 4, pointBackgroundColor: rev7d.map(v => v >= TARGET_LINE ? '#22c55e' : '#ef4444'), fill: true },
-        { label: '$250K Target', data: Array(labels7d.length).fill(TARGET_LINE), borderColor: '#f97316', borderDash: [5,4], borderWidth: 1.5, pointRadius: 0, fill: false }
-      ]
-    },
-    options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, callback: v => '$' + (v/1000).toFixed(0) + 'K' } } } }
-  });
+new Chart(document.getElementById('revenueChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      { label: 'NC Revenue', data: revL7D, backgroundColor: revL7D.map(v => v >= 250000 ? GREEN+'88' : GOLD+'88'), borderRadius: 4 },
+      { label: 'Target', data: Array(labels.length).fill(250000), type: 'line', borderColor: GREEN, borderDash: [4,4], borderWidth: 1.5, fill: false, pointRadius: 0 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '$'+Math.round(v/1000)+'K' } } } }
+});
 </script>
 </body>
 </html>
