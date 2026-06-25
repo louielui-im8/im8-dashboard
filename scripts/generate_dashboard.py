@@ -180,7 +180,8 @@ country_data = {}
 for d in countries.get("data", []):
     c = d.get("country", "")
     spend = float(d.get("spend", 0))
-    purchases = get_purchases(d)
+    # country breakdown returns purchases as direct field, not nested in actions
+    purchases = float(d.get("purchases", 0)) or get_purchases(d)
     country_data[c] = {"spend": spend, "purchases": purchases,
                        "cac": spend / purchases if purchases else 0,
                        "roas": roas_val(spend, purchases)}
