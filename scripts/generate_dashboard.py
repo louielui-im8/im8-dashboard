@@ -177,11 +177,12 @@ chart_rev_l7d    = [round(dl7d[d]["purchases"] * AOV) for d in l7d_dates]
 
 # ── Country data ──────────────────────────────────────────────────────────────
 country_data = {}
+print(f"Country data sample: {json.dumps(countries.get('data', [])[:2])}")
 for d in countries.get("data", []):
     c = d.get("country", "")
     spend = float(d.get("spend", 0))
-    # country breakdown returns purchases as direct field, not nested in actions
-    purchases = float(d.get("purchases", 0)) or get_purchases(d)
+    purchases = get_purchases(d)
+    print(f"  {c}: spend={spend}, purchases={purchases}")
     country_data[c] = {"spend": spend, "purchases": purchases,
                        "cac": spend / purchases if purchases else 0,
                        "roas": roas_val(spend, purchases)}
