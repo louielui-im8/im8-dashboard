@@ -14,7 +14,7 @@ from datetime import datetime, timedelta, timezone
 TOKEN = os.environ["META_ACCESS_TOKEN"]
 AD_ACCOUNT = "act_1000723654649396"
 BASE_URL = "https://graph.facebook.com/v19.0"
-AOV = 260  # Estimated NC Average Order Value
+AOV = 232  # NC AOV from Shopify L30D: $13.16M / 56,599 orders
 CAC_TARGET = 300
 REVENUE_TARGET_DAILY = 250000
 KEY_COUNTRIES = ["US", "GB", "AU", "CA"]
