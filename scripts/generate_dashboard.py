@@ -99,9 +99,8 @@ daily_prior = api(f"{AD_ACCOUNT}/insights", {
 print("Fetching country breakdown L7D...")
 countries = api(f"{AD_ACCOUNT}/insights", {
     "time_range": json.dumps({"since": L7D_SINCE, "until": L7D_UNTIL}),
-    "fields": "spend,actions,country",
-    "breakdowns": "country",
-    "level": "account"
+    "fields": "spend,actions",
+    "breakdowns": "country"
 })
 
 print("Fetching campaign performance L7D...")
