@@ -26,6 +26,19 @@ def api(path, params):
     with urllib.request.urlopen(url, timeout=30) as r:
         return json.loads(r.read())
 
+def api_all_pages(path, params):
+    """Fetch all pages of a paginated API response."""
+    result = api(path, params)
+    all_data = list(result.get("data", []))
+    while True:
+        next_url = result.get("paging", {}).get("next")
+        if not next_url:
+            break
+        with urllib.request.urlopen(next_url, timeout=30) as r:
+            result = json.loads(r.read())
+        all_data.extend(result.get("data", []))
+    return {"data": all_data}
+
 def fmt_currency(n):
     if n >= 1_000_000:
         return f"${n/1_000_000:.2f}M"
@@ -97,10 +110,11 @@ daily_prior = api(f"{AD_ACCOUNT}/insights", {
 })
 
 print("Fetching country breakdown L7D...")
-countries = api(f"{AD_ACCOUNT}/insights", {
+countries = api_all_pages(f"{AD_ACCOUNT}/insights", {
     "time_range": json.dumps({"since": L7D_SINCE, "until": L7D_UNTIL}),
     "fields": "spend,actions",
-    "breakdowns": "country"
+    "breakdowns": "country",
+    "limit": 100
 })
 
 print("Fetching campaign performance L7D...")
@@ -177,12 +191,10 @@ chart_rev_l7d    = [round(dl7d[d]["purchases"] * AOV) for d in l7d_dates]
 
 # ── Country data ──────────────────────────────────────────────────────────────
 country_data = {}
-print(f"Country data sample: {json.dumps(countries.get('data', [])[:2])}")
 for d in countries.get("data", []):
     c = d.get("country", "")
     spend = float(d.get("spend", 0))
     purchases = get_purchases(d)
-    print(f"  {c}: spend={spend}, purchases={purchases}")
     country_data[c] = {"spend": spend, "purchases": purchases,
                        "cac": spend / purchases if purchases else 0,
                        "roas": roas_val(spend, purchases)}
